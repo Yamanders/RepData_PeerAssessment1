@@ -1,0 +1,60 @@
+---
+title: "RepData_PeerAssessment1"
+author: "Amanda Molling"
+date: "Saturday, March 14, 2015"
+output: html_document
+---
+This is the summary of the data that was read in:   
+
+```{r}
+unzip("activity.zip")
+ activityData <- read.csv("activity.csv")
+summary(activityData)
+head(activityData)
+```
+If I wanted to convert my dates to type date, I could use. 
+
+```{r, echo=TRUE}
+activityData$date <- as.Date(activityData$date)
+
+
+```
+I computed the mean, median, and sum data as follows:
+
+```{r}
+totalDailySteps <- aggregate(steps ~ date, activityData, sum)
+meanDailySteps <- aggregate(steps ~ date, activityData, mean)
+medDailySteps <- aggregate(steps ~ date, activityData, mean)
+```
+Then my histogram:
+
+```{r}
+hist(totalDailySteps[, 2], breaks = 20, xlab = "Total Steps Each Day", main = "Histogram of Total Daily Steps Taken")
+```
+Followed by analysis on that data:
+```{r}
+mean(totalDailySteps[, 2])
+median(totalDailySteps[,2])
+```
+Further analysis comparing the average number of steps at each time interval across the days yields:
+```{r}
+meanDailyStepsByInterval <- aggregate(steps ~ interval, activityData, mean)
+library('lattice')
+xyplot(steps ~ interval, meanDailyStepsByInterval, xlab = "
+       ")
+```
+The time interval with the most steps is found to be 835.
+```{r}
+
+which(meanDailyStepsByInterval == max(meanDailyStepsByInterval[2]), arr.ind = TRUE)
+```
+where the value is:
+
+```{r}
+
+max(meanDailyStepsByInterval[,2])
+
+## And the specific interval is :
+
+meanDailyStepsByInterval[104, 1]
+
