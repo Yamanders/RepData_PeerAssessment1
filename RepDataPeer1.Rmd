@@ -57,4 +57,37 @@ max(meanDailyStepsByInterval[,2])
 ## And the specific interval is :
 
 meanDailyStepsByInterval[104, 1]
+```
+
+For the second part, I find the number of complete cases and build a table. Then, I can subtract the good cases from the total number of obs. Another way to do this is by simply calculating the number of bad cases as shown.
+
+```{r}
+##I make the good data first
+good <-complete.cases(activityData)
+
+goodData<-activityData[good,][,]
+nrow(goodData)
+nrow(activityData) - nrow(goodData)
+
+##That is the number of bad rows
+## The second method:
+badData <- activityData[!good,][,]
+nrow(badData)
+```
+
+Now to fill in the data, I use my mean data from before:
+```{r}
+newActivityData <- activityData
+for (i in 1 : (nrow(activityData) )){
+  if ( ( is.na( activityData[ i , 1] ) ) & ( i < nrow(meanDailyStepsByInterval) ) ) {
+    newActivityData[ i , 1] <- meanDailyStepsByInterval[ ( i %% ( nrow(meanDailyStepsByInterval) ) ), 2]
+  }
+  else if ( (is.na(activityData[ i, 1]) ) & ( i >= nrow(meanDailyStepsByInterval) ) ) {
+    newActivityData[ i , 1] <- meanDailyStepsByInterval[ ( (i %% nrow(meanDailyStepsByInterval) ) + 1 ), 2]
+  }
+}
+head(newActivityData)
+tail(newActivityData)
+head(meanDailyStepsByInterval)
+tail(meanDailyStepsByInterval)
 

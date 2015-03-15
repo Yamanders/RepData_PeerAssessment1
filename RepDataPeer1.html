@@ -117,6 +117,62 @@ library('lattice')</code></pre>
 
 meanDailyStepsByInterval[104, 1]</code></pre>
 <pre><code>## [1] 835</code></pre>
+<p>For the second part, I find the number of complete cases and build a table. Then, I can subtract the good cases from the total number of obs. Another way to do this is by simply calculating the number of bad cases as shown.</p>
+<pre class="r"><code>##I make the good data first
+good &lt;-complete.cases(activityData)
+
+goodData&lt;-activityData[good,][,]
+nrow(goodData)</code></pre>
+<pre><code>## [1] 15264</code></pre>
+<pre class="r"><code>nrow(activityData) - nrow(goodData)</code></pre>
+<pre><code>## [1] 2304</code></pre>
+<pre class="r"><code>##That is the number of bad rows
+## The second method:
+badData &lt;- activityData[!good,][,]
+nrow(badData)</code></pre>
+<pre><code>## [1] 2304</code></pre>
+<p>Now to fill in the data, I use my mean data from before:</p>
+<pre class="r"><code>newActivityData &lt;- activityData
+for (i in 1 : (nrow(activityData) )){
+  if ( ( is.na( activityData[ i , 1] ) ) &amp; ( i &lt; nrow(meanDailyStepsByInterval) ) ) {
+    newActivityData[ i , 1] &lt;- meanDailyStepsByInterval[ ( i %% ( nrow(meanDailyStepsByInterval) ) ), 2]
+  }
+  else if ( (is.na(activityData[ i, 1]) ) &amp; ( i &gt;= nrow(meanDailyStepsByInterval) ) ) {
+    newActivityData[ i , 1] &lt;- meanDailyStepsByInterval[ ( (i %% nrow(meanDailyStepsByInterval) ) + 1 ), 2]
+  }
+}
+head(newActivityData)</code></pre>
+<pre><code>##       steps       date interval
+## 1 1.7169811 2012-10-01        0
+## 2 0.3396226 2012-10-01        5
+## 3 0.1320755 2012-10-01       10
+## 4 0.1509434 2012-10-01       15
+## 5 0.0754717 2012-10-01       20
+## 6 2.0943396 2012-10-01       25</code></pre>
+<pre class="r"><code>tail(newActivityData)</code></pre>
+<pre><code>##           steps       date interval
+## 17563 4.6981132 2012-11-30     2330
+## 17564 3.3018868 2012-11-30     2335
+## 17565 0.6415094 2012-11-30     2340
+## 17566 0.2264151 2012-11-30     2345
+## 17567 1.0754717 2012-11-30     2350
+## 17568 1.7169811 2012-11-30     2355</code></pre>
+<pre class="r"><code>head(meanDailyStepsByInterval)</code></pre>
+<pre><code>##   interval     steps
+## 1        0 1.7169811
+## 2        5 0.3396226
+## 3       10 0.1320755
+## 4       15 0.1509434
+## 5       20 0.0754717
+## 6       25 2.0943396</code></pre>
+<pre class="r"><code>tail(meanDailyStepsByInterval)</code></pre>
+<pre><code>##     interval     steps
+## 283     2330 2.6037736
+## 284     2335 4.6981132
+## 285     2340 3.3018868
+## 286     2345 0.6415094
+## 287     2350 0.2264151
+## 288     2355 1.0754717</code></pre>
 
 
 </div>
