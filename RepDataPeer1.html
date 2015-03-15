@@ -204,6 +204,28 @@ print(percentDifference)</code></pre>
 <pre><code>## [1] 0.01105434</code></pre>
 </div>
 </div>
+<div id="looking-at-weekends-vs.-weekdays" class="section level1">
+<h1>Looking at Weekends Vs. Weekdays:</h1>
+<pre class="r"><code>weekValue &lt;- (weekdays(as.Date(activityData$date)))
+big &lt;- cbind(activityData, weekValue)
+for (step in 1:nrow(activityData)){
+    if ( ( big[step, 4] == &quot;Sunday&quot; ) || ( big[step, 4] == &quot;Saturday&quot;) ){
+    #  big[step, 4 ] &lt;- &quot;Weekend&quot;
+     # print(&quot;Weekend&quot;)
+      }
+    else {
+     # big[step, 4] &lt;- &quot;Weekday&quot;
+    }
+}
+  head(big)</code></pre>
+<pre><code>##   steps       date interval weekValue
+## 1    NA 2012-10-01        0    Monday
+## 2    NA 2012-10-01        5    Monday
+## 3    NA 2012-10-01       10    Monday
+## 4    NA 2012-10-01       15    Monday
+## 5    NA 2012-10-01       20    Monday
+## 6    NA 2012-10-01       25    Monday</code></pre>
+</div>
 
 
 </div>

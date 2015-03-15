@@ -113,3 +113,18 @@ By looking the mean (107.66.19) and median (10765) from before, it can be seem t
 percentDifference <- 100 * (10766.19 - 10765)/(10765)
 print(percentDifference)
 ```
+# Looking at Weekends Vs. Weekdays:
+
+```{r}
+weekValue <- (weekdays(as.Date(activityData$date)))
+big <- cbind(activityData, weekValue)
+for (step in 1:nrow(activityData)){
+    if ( ( big[step, 4] == "Sunday" ) || ( big[step, 4] == "Saturday") ){
+    #  big[step, 4 ] <- "Weekend"
+     # print("Weekend")
+      }
+    else {
+     # big[step, 4] <- "Weekday"
+    }
+}
+  head(big)
