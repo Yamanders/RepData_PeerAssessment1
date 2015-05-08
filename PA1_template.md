@@ -1,7 +1,12 @@
 # Reproducible Research: Peer Assessment 1
 
+## The project: 
+This project was assigned by Roger Peng under the class Reproducible research in the Coursera Data Science Track. The goal is to examine physical activity through the data and week using and activity monitoring device. The original dataset can be retrieved from URL presented later in the code. 
 
 ## Loading and preprocessing the data
+I downloaded the file from the url given in the assignment. 
+Then, I unzipped it, read the .csv data file in under the name activtyData and coverted the date column to an R date format to ease analysis.
+
 
 ```r
 fileURL <- "http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
@@ -12,12 +17,12 @@ activityData$date <- as.Date(activityData$date)
 ```
 
 ## What is mean total number of steps taken per day?
-I computed the mean, median, and sum data as follows:
+I computed the mean, median, and sum data by doing the following:
+First, I aggregated the steps into a total sum for each day. Then, I made a histogram of these totals each day. Next, I took a mean of the total steps per day column to produce an average number of total daily steps. Finally, I used the median function to get the median of the totals by day.
+
 
 ```r
 totalDailySteps <- aggregate(steps ~ date, activityData, sum)
-
-#medDailySteps <- aggregate(steps ~ date, activityData, mean)
 
 head(totalDailySteps)
 ```
@@ -31,6 +36,13 @@ head(totalDailySteps)
 ## 5 2012-10-06 15420
 ## 6 2012-10-07 11015
 ```
+
+```r
+hist(totalDailySteps[, 2], breaks = 20, xlab = "Total Steps Each Day", main = "Histogram of Total Daily Steps Taken")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+The mean of the daily steps was found to be 10766.19 and the median is 10765.
 
 ```r
 mean(totalDailySteps[, 2])
@@ -63,7 +75,7 @@ library('lattice')
 xyplot(steps ~ interval, meanDailyStepsByInterval, xlab = "Interval", ylab = "Number of steps", type = "l")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 The time interval with the most steps is found to be 835.
 
 ```r
@@ -97,9 +109,10 @@ meanDailyStepsByInterval[104, 1]
 ## Imputing missing values
 For the second part, I find the number of complete cases and build a table. Then, I can subtract the good cases from the total number of obs. Another way to do this is by simply calculating the number of bad cases as shown.
 
+I make the good data first:
+
 
 ```r
-##I make the good data first
 good <-complete.cases(activityData)
 
 goodData<-activityData[good,][,]
@@ -111,25 +124,21 @@ nrow(goodData)
 ```
 
 ```r
-nrow(activityData) - nrow(goodData)
+nrow(activityData) - nrow(goodData) ##This is the number of bad rows
 ```
 
 ```
 ## [1] 2304
 ```
 
-```r
-##That is the number of bad rows
+
 ## The second method:
+
 badData <- activityData[!good,][,]
 nrow(badData)
 ```
-
-```
-## [1] 2304
-```
 # Replacing Missing Data
-### To fill in the missing data, I use my mean data calcuated at each time interval from before:
+ To fill in the missing data, I use my mean data calcuated at each time interval from before:
 
 ```r
 newActivityData <- activityData
@@ -139,7 +148,7 @@ for (i in 1 : (nrow(activityData) )){
   }
 }
 ```
-### As confirmation of my replacement, I have shown the front and back of each of the tables, where NA values dominate. 
+As confirmation of my replacement, I have shown the front and back of each of the tables, where NA values dominate. 
 
 
 ```r
@@ -205,7 +214,7 @@ totalDailySteps <- aggregate(steps ~ date, newActivityData, sum)
 hist(totalDailySteps[, 2], breaks = 20, xlab = "Total Steps Each Day", main = "Histogram of Total Daily Steps Taken")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
 
 ## The mean and median of the data with artificially replaced  values are:
 
@@ -235,13 +244,17 @@ print(percentDifference)
 ```
 ## [1] 0.01105434
 ```
+
 # Looking at Weekends Vs. Weekdays:
 
 
 ```r
+# I use the as.Date function to convert my dates into days of the week. 
 weekValue <- (weekdays(as.Date(newActivityData$date)))
 big <- cbind(newActivityData, weekValue)
-big$weekValue <- as.character(big$weekValue)
+big$weekValue <- as.character(big$weekValue) # I need to convert to character to do my check later.
+
+# I do a check and substitution if the day is Satuday or Sunday with weekend, otherwise, I rename the value "Weekday"
 for (step in 1:nrow(newActivityData)){
     if ( ( big[step, 4] == "Sunday" ) || ( big[step, 4] == "Saturday") ){
       big[step, 4 ] <- "Weekend"
@@ -265,7 +278,8 @@ for (step in 1:nrow(newActivityData)){
 ```
 
 ```r
-bigWeek <- subset(big, big$weekValue == "Weekday",)
+bigWeek <- subset(big, big$weekValue == "Weekday",) # I break up the data set so that I can graph separately. This isn't necessary, but it made it simpler for me.
+
 bigWeekAve <- aggregate(steps ~interval, bigWeek, mean)
 bigEnd <- subset(big, big$weekValue == "Weekend",)
 bigEndAve <- aggregate(steps ~interval, bigEnd, mean)
@@ -278,4 +292,4 @@ plot(bigWeekAve$interval, bigWeekAve$steps, type = "l", xlab = "Interval", ylab 
 plot(bigEndAve$interval, bigEndAve$steps, type = "l", xlab = "Interval", ylab = "Number of steps (average)", main = "Weekend")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-12-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-13-1.png) 

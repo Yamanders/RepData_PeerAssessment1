@@ -64,8 +64,13 @@ img {
 </div>
 
 
+<div id="the-project" class="section level2">
+<h2>The project:</h2>
+<p>This project was assigned by Roger Peng under the class Reproducible research in the Coursera Data Science Track. The goal is to examine physical activity through the data and week using and activity monitoring device. The original dataset can be retrieved from URL presented later in the code.</p>
+</div>
 <div id="loading-and-preprocessing-the-data" class="section level2">
 <h2>Loading and preprocessing the data</h2>
+<p>I downloaded the file from the url given in the assignment. Then, I unzipped it, read the .csv data file in under the name activtyData and coverted the date column to an R date format to ease analysis.</p>
 <pre class="r"><code>fileURL &lt;- &quot;http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip&quot;
 download.file(fileURL, &quot;activityDataFile.zip&quot;)
 unzip(&quot;activityDataFile.zip&quot;)
@@ -74,10 +79,8 @@ activityData$date &lt;- as.Date(activityData$date)</code></pre>
 </div>
 <div id="what-is-mean-total-number-of-steps-taken-per-day" class="section level2">
 <h2>What is mean total number of steps taken per day?</h2>
-<p>I computed the mean, median, and sum data as follows:</p>
+<p>I computed the mean, median, and sum data by doing the following: First, I aggregated the steps into a total sum for each day. Then, I made a histogram of these totals each day. Next, I took a mean of the total steps per day column to produce an average number of total daily steps. Finally, I used the median function to get the median of the totals by day.</p>
 <pre class="r"><code>totalDailySteps &lt;- aggregate(steps ~ date, activityData, sum)
-
-#medDailySteps &lt;- aggregate(steps ~ date, activityData, mean)
 
 head(totalDailySteps)</code></pre>
 <pre><code>##         date steps
@@ -87,6 +90,8 @@ head(totalDailySteps)</code></pre>
 ## 4 2012-10-05 13294
 ## 5 2012-10-06 15420
 ## 6 2012-10-07 11015</code></pre>
+<pre class="r"><code>hist(totalDailySteps[, 2], breaks = 20, xlab = &quot;Total Steps Each Day&quot;, main = &quot;Histogram of Total Daily Steps Taken&quot;)</code></pre>
+<p><img src="data:image/png;base64,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" /> The mean of the daily steps was found to be 10766.19 and the median is 10765.</p>
 <pre class="r"><code>mean(totalDailySteps[, 2])</code></pre>
 <pre><code>## [1] 10766.19</code></pre>
 <pre class="r"><code>median(totalDailySteps[,2])</code></pre>
@@ -113,33 +118,25 @@ meanDailyStepsByInterval[104, 1]</code></pre>
 <div id="imputing-missing-values" class="section level2">
 <h2>Imputing missing values</h2>
 <p>For the second part, I find the number of complete cases and build a table. Then, I can subtract the good cases from the total number of obs. Another way to do this is by simply calculating the number of bad cases as shown.</p>
-<pre class="r"><code>##I make the good data first
-good &lt;-complete.cases(activityData)
+<p>I make the good data first:</p>
+<pre class="r"><code>good &lt;-complete.cases(activityData)
 
 goodData&lt;-activityData[good,][,]
 nrow(goodData)</code></pre>
 <pre><code>## [1] 15264</code></pre>
-<pre class="r"><code>nrow(activityData) - nrow(goodData)</code></pre>
-<pre><code>## [1] 2304</code></pre>
-<pre class="r"><code>##That is the number of bad rows
-## The second method:
-badData &lt;- activityData[!good,][,]
-nrow(badData)</code></pre>
+<pre class="r"><code>nrow(activityData) - nrow(goodData) ##This is the number of bad rows</code></pre>
 <pre><code>## [1] 2304</code></pre>
 </div>
-<div id="replacing-missing-data" class="section level1">
-<h1>Replacing Missing Data</h1>
-<div id="to-fill-in-the-missing-data-i-use-my-mean-data-calcuated-at-each-time-interval-from-before" class="section level3">
-<h3>To fill in the missing data, I use my mean data calcuated at each time interval from before:</h3>
+<div id="the-second-method" class="section level2">
+<h2>The second method:</h2>
+<p>badData &lt;- activityData[!good,][,] nrow(badData) ``` # Replacing Missing Data To fill in the missing data, I use my mean data calcuated at each time interval from before:</p>
 <pre class="r"><code>newActivityData &lt;- activityData
 for (i in 1 : (nrow(activityData) )){
   if (  is.na( activityData[ i , 1] ) ) {
     newActivityData[ i , 1] &lt;- meanDailyStepsByInterval[ ( ( i - 1 ) %% ( nrow(meanDailyStepsByInterval) ) + 1 ), 2]
   }
 }</code></pre>
-</div>
-<div id="as-confirmation-of-my-replacement-i-have-shown-the-front-and-back-of-each-of-the-tables-where-na-values-dominate." class="section level3">
-<h3>As confirmation of my replacement, I have shown the front and back of each of the tables, where NA values dominate.</h3>
+<p>As confirmation of my replacement, I have shown the front and back of each of the tables, where NA values dominate.</p>
 <pre class="r"><code>head(newActivityData)</code></pre>
 <pre><code>##       steps       date interval
 ## 1 1.7169811 2012-10-01        0
@@ -190,12 +187,14 @@ hist(totalDailySteps[, 2], breaks = 20, xlab = &quot;Total Steps Each Day&quot;,
 print(percentDifference)</code></pre>
 <pre><code>## [1] 0.01105434</code></pre>
 </div>
-</div>
 <div id="looking-at-weekends-vs.-weekdays" class="section level1">
 <h1>Looking at Weekends Vs. Weekdays:</h1>
-<pre class="r"><code>weekValue &lt;- (weekdays(as.Date(newActivityData$date)))
+<pre class="r"><code># I use the as.Date function to convert my dates into days of the week. 
+weekValue &lt;- (weekdays(as.Date(newActivityData$date)))
 big &lt;- cbind(newActivityData, weekValue)
-big$weekValue &lt;- as.character(big$weekValue)
+big$weekValue &lt;- as.character(big$weekValue) # I need to convert to character to do my check later.
+
+# I do a check and substitution if the day is Satuday or Sunday with weekend, otherwise, I rename the value &quot;Weekday&quot;
 for (step in 1:nrow(newActivityData)){
     if ( ( big[step, 4] == &quot;Sunday&quot; ) || ( big[step, 4] == &quot;Saturday&quot;) ){
       big[step, 4 ] &lt;- &quot;Weekend&quot;
@@ -213,7 +212,8 @@ for (step in 1:nrow(newActivityData)){
 ## 4 0.1509434 2012-10-01       15   Weekday
 ## 5 0.0754717 2012-10-01       20   Weekday
 ## 6 2.0943396 2012-10-01       25   Weekday</code></pre>
-<pre class="r"><code>bigWeek &lt;- subset(big, big$weekValue == &quot;Weekday&quot;,)
+<pre class="r"><code>bigWeek &lt;- subset(big, big$weekValue == &quot;Weekday&quot;,) # I break up the data set so that I can graph separately. This isn't necessary, but it made it simpler for me.
+
 bigWeekAve &lt;- aggregate(steps ~interval, bigWeek, mean)
 bigEnd &lt;- subset(big, big$weekValue == &quot;Weekend&quot;,)
 bigEndAve &lt;- aggregate(steps ~interval, bigEnd, mean)
