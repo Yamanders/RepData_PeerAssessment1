@@ -1,4 +1,11 @@
-# Reproducible Research: Peer Assessment 1
+---
+title: 'Reproducible Research: Peer Assessment 1'
+output:
+  html_document:
+    keep_md: yes
+    Author: Amanda Molling
+    Date: APril 10, 2015
+---
 
 ## The project: 
 This project was assigned by Roger Peng under the class Reproducible research in the Coursera Data Science Track. The goal is to examine physical activity through the data and week using and activity monitoring device. The original dataset can be retrieved from URL presented later in the code. 
@@ -41,7 +48,7 @@ head(totalDailySteps)
 hist(totalDailySteps[, 2], breaks = 20, xlab = "Total Steps Each Day", main = "Histogram of Total Daily Steps Taken")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
 The mean of the daily steps was found to be 10766.19 and the median is 10765.
 
 ```r
@@ -65,17 +72,10 @@ median(totalDailySteps[,2])
 ```r
 meanDailyStepsByInterval <- aggregate(steps ~ interval, activityData, mean)
 library('lattice')
-```
-
-```
-## Warning: package 'lattice' was built under R version 3.1.3
-```
-
-```r
 xyplot(steps ~ interval, meanDailyStepsByInterval, xlab = "Interval", ylab = "Number of steps", type = "l")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
 The time interval with the most steps is found to be 835.
 
 ```r
@@ -214,7 +214,7 @@ totalDailySteps <- aggregate(steps ~ date, newActivityData, sum)
 hist(totalDailySteps[, 2], breaks = 20, xlab = "Total Steps Each Day", main = "Histogram of Total Daily Steps Taken")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10-1.png) 
 
 ## The mean and median of the data with artificially replaced  values are:
 
@@ -292,4 +292,4 @@ plot(bigWeekAve$interval, bigWeekAve$steps, type = "l", xlab = "Interval", ylab 
 plot(bigEndAve$interval, bigEndAve$steps, type = "l", xlab = "Interval", ylab = "Number of steps (average)", main = "Weekend")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-13-1.png) 
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13-1.png) 
